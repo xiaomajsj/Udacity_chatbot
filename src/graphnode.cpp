@@ -10,9 +10,9 @@ GraphNode::~GraphNode()
 {
     //// STUDENT CODE
     ////
-
-    delete _chatBot; 
-
+    
+    std::cout << "GraphNode Destructor " <<_id<< std::endl;
+    std::cout << "ChatBot in this GraphNode is "<<_chatBot << std::endl;
     ////
     //// EOF STUDENT CODE
 }
@@ -37,6 +37,7 @@ void GraphNode::AddEdgeToChildNode(GraphEdge *edge)
 void GraphNode::MoveChatbotHere(ChatBot *chatbot)
 {
     _chatBot = chatbot;
+    chatbot = nullptr;
     _chatBot->SetCurrentNode(this);
 }
 

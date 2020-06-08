@@ -44,6 +44,28 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+ChatBot::ChatBot(ChatBot &chatbot){
+std::cout<<"ChatBot copy constructor from "<<&chatbot<<"to "<<this<<std::endl;
+_image=new wxBitmap();
+*_image = *chatbot._image;
+*_currentNode=*chatbot._currentNode;
+*_rootNode=*chatbot._rootNode;
+*_chatLogic=*chatbot._chatLogic;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &chatbot){
+std::cout<<"ChatBot copy operator from "<<&chatbot<<"to "<<this<<std::endl;
+if(this==&chatbot){
+    return *this;
+}
+_image=new wxBitmap();
+*_image = *chatbot._image;
+*_currentNode=*chatbot._currentNode;
+*_rootNode=*chatbot._rootNode;
+*_chatLogic=*chatbot._chatLogic;
+return *this;
+}
+
 
 ////
 //// EOF STUDENT CODE
