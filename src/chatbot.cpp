@@ -1,4 +1,3 @@
-#include <iostream>
 #include <random>
 #include <algorithm>
 #include <ctime>
@@ -44,28 +43,68 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+
 ChatBot::ChatBot(ChatBot &chatbot){
 std::cout<<"ChatBot copy constructor from "<<&chatbot<<"to "<<this<<std::endl;
-_image=new wxBitmap();
+if(_image!=NULL){delete _image;}
+_image = new wxBitmap(*chatbot._image);
 *_image = *chatbot._image;
-*_currentNode=*chatbot._currentNode;
-*_rootNode=*chatbot._rootNode;
-*_chatLogic=*chatbot._chatLogic;
+_currentNode=chatbot._currentNode;
+_rootNode=chatbot._rootNode;
+_chatLogic=chatbot._chatLogic;
 }
 
 ChatBot &ChatBot::operator=(ChatBot &chatbot){
-std::cout<<"ChatBot copy operator from "<<&chatbot<<"to "<<this<<std::endl;
+std::cout<<"ChatBot copy assignment from "<<&chatbot<<"to "<<this<<std::endl;
 if(this==&chatbot){
     return *this;
 }
-_image=new wxBitmap();
+if(_image!=NULL){delete _image;}
+_image = new wxBitmap(*chatbot._image);
 *_image = *chatbot._image;
-*_currentNode=*chatbot._currentNode;
-*_rootNode=*chatbot._rootNode;
-*_chatLogic=*chatbot._chatLogic;
+_currentNode=chatbot._currentNode;
+_rootNode=chatbot._rootNode;
+_chatLogic=chatbot._chatLogic;
 return *this;
 }
 
+ChatBot::ChatBot(ChatBot &&source){
+std::cout<<"ChatBot move constructor from "<<&source<<" to "<<this<<std::endl;
+_image = source._image;
+_currentNode=source._currentNode;
+_rootNode=source._rootNode;
+_chatLogic=source._chatLogic;
+
+ _chatLogic->SetChatbotHandle(this);
+
+
+source._image=NULL;
+source._currentNode=nullptr;
+source._rootNode=nullptr;
+source._chatLogic=nullptr;
+std::cout<<"ChatBot move constructor complete "<<&source<<" to "<<this<<std::endl;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &&source){
+std::cout<<"ChatBot move assignment constructor from "<<&source<<" to "<<this<<std::endl;
+if(this==&source){
+    return *this;
+}
+_image = source._image;
+_currentNode=source._currentNode;
+_rootNode=source._rootNode;
+_chatLogic=source._chatLogic;
+
+ _chatLogic->SetChatbotHandle(this);
+
+
+source._image=NULL;
+source._currentNode=nullptr;
+source._rootNode=nullptr;
+source._chatLogic=nullptr;
+std::cout<<"ChatBot move assignment constructor complete from "<<&source<<" to "<<this<<std::endl;
+return *this;
+}
 
 ////
 //// EOF STUDENT CODE
@@ -108,15 +147,15 @@ void ChatBot::SetCurrentNode(GraphNode *node)
 {
     // update pointer to current node
     _currentNode = node;
-
     // select a random node answer (if several answers should exist)
     std::vector<std::string> answers = _currentNode->GetAnswers();
     std::mt19937 generator(int(std::time(0)));
     std::uniform_int_distribution<int> dis(0, answers.size() - 1);
     std::string answer = answers.at(dis(generator));
-
+    
     // send selected node answer to user
     _chatLogic->SendMessageToUser(answer);
+    
 }
 
 int ChatBot::ComputeLevenshteinDistance(std::string s1, std::string s2)

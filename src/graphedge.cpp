@@ -4,6 +4,7 @@
 GraphEdge::GraphEdge(int id)
 {
     _id = id;
+    // std::cout << "GraphNode Edge " <<_id<< std::endl;
 }
 
 void GraphEdge::SetChildNode(GraphNode *childNode)
